@@ -1,0 +1,22 @@
+.App {
+  text-align: center;
+}
+
+.input-box {
+    display: flex;
+    justify-content:center;
+}
+
+.question-box {
+    text-align: left;
+}
+
+.question-details {
+    background-color: lightblue;
+    width: 85%;
+}
+
+.block-center {
+    margin-left: auto;
+    margin-right: auto;
+}
