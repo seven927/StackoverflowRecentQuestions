@@ -34,7 +34,7 @@ export function GetStackOverflowQuestions(param: IGetStackoverflowQuestionsParam
         //Round start to the start of the day
         startDatePiece = startDatePiece - (startDatePiece % 86400);
     }
-    const url = "https://api.stackexchange.com/2.3/questions?pagesize=50&order=desc&sort=activity&site=stackoverflow&filter=!-NHuCSHw)YEfhBHd*TSKbbh2K(ew(7159"
+    const url = "https://api.stackexchange.com/2.3/questions?pagesize=50&order=desc&sort=creation&site=stackoverflow&filter=!-NHuCSHw)YEfhBHd*TSKbbh2K(ew(7159"
         + "&page=" + page + "&fromdate=" + startDatePiece + "&todate=" + endDatePiece;
 
 

@@ -14,7 +14,7 @@ import Alert from '@mui/material/Alert';
 function App() {
     const [endDate] = useState<Date>(new Date());
     const [daysInPast, setDaysInPast] = useState<number>(0);
-    const [emptyField, setEmptyField] = useState<boolean>(false);
+    const [invalidField, setInvalidField] = useState<boolean>(false);
     const [questions, setQuestions] = useState<IQuestion[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [loadFailed, setLoadFailed] = useState<boolean>(false);
@@ -64,11 +64,12 @@ function App() {
 
     const fieldChangeHandler = (event: React.ChangeEvent<HTMLInputElement>)=>
     {
-        if (event.target.value === "") {
-            setEmptyField(true);
+        if (event.target.value === ""|| !event.target.value.match(/^\d+$/)) 
+        {
+            setInvalidField(true);
         }
         else {
-            setEmptyField(false);
+            setInvalidField(false);
             setDaysInPast(parseInt(event.target.value));
         }
     }
@@ -88,8 +89,8 @@ function App() {
             <h1>Recent Stackoverflow Questions</h1>
             <Divider sx={{ marginBottom: 3 }}>Criteria</Divider>
             <Box className="input-box">
-                <Textfield label="Days in the past" variant="filled" defaultValue={0} error={emptyField} required onChange={fieldChangeHandler} disabled={isLoading} />
-                <Button sx={{ marginLeft: 5 }} variant="contained" disabled={emptyField||isLoading} onClick={()=>loadQuestions(true)}>Get questions</Button>
+                <Textfield label="Days in the past" variant="filled" defaultValue={0} error={invalidField} required onChange={fieldChangeHandler} disabled={isLoading} />
+                <Button sx={{ marginLeft: 5 }} variant="contained" disabled={invalidField||isLoading} onClick={()=>loadQuestions(true)}>Get questions</Button>
             </Box>
             {questions.length > 0 ? <Divider sx={{ marginTop: 5 }}> Question List</Divider> : null}
             <List component="div">{questions.map((question) => <QuestionComponent key={question.question_id} question={question} />)}</List>
