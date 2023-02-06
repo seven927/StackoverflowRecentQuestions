@@ -8,6 +8,8 @@ import List from '@mui/material/List';
 import Box from '@mui/material/Box';
 import QuestionComponent from './components/QuestionComponent';
 import { GetStackOverflowQuestions, IGetStackoverflowQuestionsParam } from './StackExchangeProxy';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
 
 function App() {
     const [endDate] = useState<Date>(new Date());
@@ -15,6 +17,7 @@ function App() {
     const [emptyField, setEmptyField] = useState<boolean>(false);
     const [questions, setQuestions] = useState<IQuestion[]>([]);
     const [isLoading, setIsLoading] = useState<boolean>(false);
+    const [loadFailed, setLoadFailed] = useState<boolean>(false);
     const [page, setPage] = useState<number>(1);
     const [hasMoreQuestions, setHasMoreQuestions] = useState<boolean>(false);
 
@@ -52,6 +55,10 @@ function App() {
                 });
             }
         }
+        else
+        {
+            setLoadFailed(true);
+        }
         setIsLoading(false);
     }
 
@@ -66,6 +73,16 @@ function App() {
         }
     }
 
+    const closeFailedRequestAlertHandler = (_event?: React.SyntheticEvent | Event, reason?: string) =>
+    {
+        //Keep toast until timeout or end users close it
+        if (reason === "clickaway")
+        {
+            return;
+        }
+        setLoadFailed(false);
+    }
+
     return (
         <div className="App">
             <h1>Recent Stackoverflow Questions</h1>
@@ -76,7 +93,10 @@ function App() {
             </Box>
             {questions.length > 0 ? <Divider sx={{ marginTop: 5 }}> Question List</Divider> : null}
             <List component="div">{questions.map((question) => <QuestionComponent key={question.question_id} question={question} />)}</List>
-            {hasMoreQuestions ? <Button sx={{ marginTop: 5 }} variant="contained" onClick={() => loadQuestions(false)} disabled={ isLoading }>More questions...</Button> : null}
+            {hasMoreQuestions ? <Button sx={{ marginTop: 5 }} variant="contained" onClick={() => loadQuestions(false)} disabled={isLoading}>More questions...</Button> : null}
+            <Snackbar open={loadFailed} autoHideDuration={3000} onClose={closeFailedRequestAlertHandler }>
+                <Alert onClose={closeFailedRequestAlertHandler} severity="error">Fail to load questions!</Alert>
+            </Snackbar>
         </div>
     );
 }
